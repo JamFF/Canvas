@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Canvas</string>
+
+    <array name="main_items">
+        <item>Transform</item>
+        <item>SaveRestore</item>
+        <item>SplitDemo</item>
+    </array>
+</resources>
