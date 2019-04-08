@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.ff.canvas.demo.SplashFragment;
 import com.ff.canvas.save.SaveRestoreFragment;
 import com.ff.canvas.split.SplitFragment;
 import com.ff.canvas.transform.TransformFragment;
@@ -45,6 +46,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnLi
                 break;
             case 2:
                 fragment = new SplitFragment();
+                break;
+            case 3:
+                fragment = new SplashFragment();
                 break;
             default:
                 return;

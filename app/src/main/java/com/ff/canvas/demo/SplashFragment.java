@@ -1,9 +1,11 @@
-package com.ff.canvas.split;
+package com.ff.canvas.demo;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.ff.canvas.R;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,24 +14,25 @@ import androidx.fragment.app.Fragment;
 /**
  * description:
  * author: FF
- * time: 2019/4/6 22:52
+ * time: 2019/4/7 14:03
  */
-public class SplitFragment extends Fragment {
+public class SplashFragment extends Fragment {
 
-    private SplitViewPlus mSplitView;
+    private SplashView mSplashView;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mSplitView = new SplitViewPlus(getContext());
-        return mSplitView;
+        View view = inflater.inflate(R.layout.fragment_demo, container, false);
+        mSplashView = view.findViewById(R.id.splash);
+        return view;
     }
 
     @Override
     public void onDestroyView() {
-        if (mSplitView != null) {
-            mSplitView.stopAnimator();
+        if (mSplashView != null) {
+            mSplashView.stopAnimator();
         }
         super.onDestroyView();
     }

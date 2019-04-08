@@ -1,4 +1,4 @@
-package com.ff.canvas.widget;
+package com.ff.canvas.split;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 
 import com.ff.canvas.R;
-import com.ff.canvas.split.BallBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +27,11 @@ import androidx.annotation.UiThread;
  * author: FF
  * time: 2019/4/6 21:30
  */
-public class SplitView extends View {
+public class SplitViewPlus extends View {
 
     private static final String TAG = "SplitView";
 
-    private static final float DIAMETER = 3;// 粒子直径
+    private static final float BALL_DIAMETER = 15;// 粒子直径
 
     private Paint mPaint;
     private Bitmap mBitmap;
@@ -41,19 +40,19 @@ public class SplitView extends View {
     private List<BallBean> mBallBeans = new ArrayList<>();
     private ValueAnimator mAnimator;
 
-    private volatile boolean completeInit;
+    private boolean startAnimator = false;
 
     private Handler mHandler = new Handler();
 
-    public SplitView(Context context) {
+    public SplitViewPlus(Context context) {
         this(context, null);
     }
 
-    public SplitView(Context context, @Nullable AttributeSet attrs) {
+    public SplitViewPlus(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public SplitView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public SplitViewPlus(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
@@ -71,13 +70,34 @@ public class SplitView extends View {
             @Override
             public void run() {
                 Log.d(TAG, "initBall: start");
+
+                float cx = 0;// 颗粒圆的X坐标
+                float cy = 0;// 颗粒圆的Y坐标
                 for (int i = 0; i < mBitmap.getWidth(); i++) {
+                    if (i % BALL_DIAMETER != 0) {
+                        continue;// 根据直径降低像素密度，保证图片大小不变
+                    }
+                    if (i == 0) {// 第一列
+                        cx = BALL_DIAMETER / 2;
+                    } else {
+                        cx += BALL_DIAMETER;
+                    }
                     for (int j = 0; j < mBitmap.getHeight(); j++) {
+                        if (j % BALL_DIAMETER != 0) {
+                            continue;// 根据直径降低像素密度，保证图片大小不变
+                        }
+                        // 为了保证图片大小不变
+                        if (j == 0) {// 第一行
+                            cy = BALL_DIAMETER / 2;
+                        } else {
+                            cy += BALL_DIAMETER;
+                        }
+
                         BallBean ball = new BallBean();
                         ball.setColor(mBitmap.getPixel(i, j));// 获取某个像素点的颜色
-                        ball.setX(i * DIAMETER + DIAMETER / 2);// 颗粒圆的X坐标
-                        ball.setY(j * DIAMETER + DIAMETER / 2);// 颗粒圆的Y坐标
-                        ball.setR(DIAMETER / 2);// 颗粒圆的半径
+                        ball.setX(cx);// 颗粒圆的X坐标
+                        ball.setY(cy);// 颗粒圆的Y坐标
+                        ball.setR(BALL_DIAMETER / 2);// 颗粒圆的半径
 
                         // X轴速度(-20,20)之间的随机值
                         ball.setvX((float) (Math.pow(-1, Math.ceil(Math.random() * 1000)) * 20 * Math.random()));
@@ -90,7 +110,6 @@ public class SplitView extends View {
                         mBallBeans.add(ball);
                     }
                 }
-                completeInit = true;
                 postInvalidate();
                 Log.d(TAG, "initBall: end");
             }
@@ -100,7 +119,8 @@ public class SplitView extends View {
     private void initAnimator() {
         mAnimator = ValueAnimator.ofFloat(0, 1);
         mAnimator.setRepeatCount(-1);// 不断重复
-        mAnimator.setDuration(2000);
+        // 根据直径计算时常，直径越小，密度越大，计算越耗时，时常需要越小
+        mAnimator.setDuration((long) (BALL_DIAMETER * 2000));
         mAnimator.setInterpolator(new LinearInterpolator());// 线性插值器
         mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -155,31 +175,36 @@ public class SplitView extends View {
         Log.d(TAG, "onMeasure: ");
         measuredHeight = getMeasuredHeight();
         // 计算居中需要的平移值
-        translate = (getMeasuredWidth() - mBitmap.getWidth() * DIAMETER) / 2.0f;
+        translate = (getMeasuredWidth() - mBitmap.getWidth()) / 2.0f;
     }
 
     @Override
     protected void onDraw(final Canvas canvas) {
         Log.d(TAG, "onDraw: ");
 
-        canvas.drawBitmap(mBitmap, 0, 0, mPaint);
-
         // 移动画布到水平居中
         canvas.translate(translate, translate);
 
-        if (completeInit) {
+        if (startAnimator) {
             for (final BallBean ballBean : mBallBeans) {
                 mPaint.setColor(ballBean.getColor());
                 canvas.drawCircle(ballBean.getX(), ballBean.getY(), ballBean.getR(), mPaint);
             }
+        } else {
+            canvas.drawBitmap(mBitmap, 0, 0, mPaint);
         }
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            // 执行动画
-            mAnimator.start();
+            if (event.getX() > translate && event.getY() > translate
+                    && event.getX() < translate + mBallBeans.get(mBallBeans.size() - 1).getX()
+                    && event.getY() < translate + mBallBeans.get(mBallBeans.size() - 1).getY()) {
+                // 点击图片执行动画
+                startAnimator = true;
+                mAnimator.start();
+            }
         }
         return super.onTouchEvent(event);
     }
