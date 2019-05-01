@@ -5,13 +5,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.ff.canvas.demo.SplashFragment;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
+import com.ff.canvas.draw.DrawFragment;
+import com.ff.canvas.splash.SplashFragment;
 import com.ff.canvas.save.SaveRestoreFragment;
 import com.ff.canvas.split.SplitFragment;
 import com.ff.canvas.transform.TransformFragment;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 
 public class MainActivity extends AppCompatActivity implements MainFragment.OnListItemClickListener {
 
@@ -38,17 +39,20 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnLi
     public void onListItemClick(int position) {
         Fragment fragment;
         switch (position) {
-            case 0:
+            case 0:// Canvas的transform效果
                 fragment = new TransformFragment();
                 break;
-            case 1:
+            case 1:// Canvas的save和restore
                 fragment = new SaveRestoreFragment();
                 break;
-            case 2:
+            case 2:// 爆裂效果
                 fragment = new SplitFragment();
                 break;
-            case 3:
+            case 3:// 自定义Splash
                 fragment = new SplashFragment();
+                break;
+            case 4:// ViewGroup的draw
+                fragment = new DrawFragment();
                 break;
             default:
                 return;

@@ -9,7 +9,7 @@
         android:background="@drawable/content"
         android:scaleType="centerCrop" />
 
-    <com.ff.canvas.demo.SplashView
+    <com.ff.canvas.splash.SplashView
         android:id="@+id/splash"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

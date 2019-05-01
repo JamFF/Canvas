@@ -1,4 +1,4 @@
-package com.ff.canvas.demo;
+package com.ff.canvas.splash;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

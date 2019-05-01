@@ -1,4 +1,4 @@
-package com.ff.canvas.save;
+package com.ff.canvas.draw;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,16 +9,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.ff.canvas.R;
+
 /**
- * description: Canvas的save和restore
+ * description: 对比ViewGroup的dispatchDraw和onDraw
  * author: FF
- * time: 2019/4/6 15:49
+ * time: 2019/4/7 14:03
  */
-public class SaveRestoreFragment extends Fragment {
+public class DrawFragment extends Fragment {
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return new SaveRestoreView(getContext());
+        return inflater.inflate(R.layout.fragment_draw, container, false);
     }
 }

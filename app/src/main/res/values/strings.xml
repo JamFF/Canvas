@@ -2,9 +2,10 @@
     <string name="app_name">Canvas</string>
 
     <array name="main_items">
-        <item>Transform</item>
-        <item>SaveRestore</item>
-        <item>SplitDemo</item>
-        <item>SplashDemo</item>
+        <item>Canvas的transform效果</item>
+        <item>Canvas的save和restore</item>
+        <item>爆裂效果</item>
+        <item>自定义Splash</item>
+        <item>ViewGroup的draw</item>
     </array>
 </resources>
